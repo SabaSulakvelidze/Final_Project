@@ -2,28 +2,32 @@ package org.example.final_project.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.final_project.model.request.ShopRequest;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@NoArgsConstructor
+@Builder
 @Entity
-@Table(name = "shops")
+@Table(name = "products")
 public class ShopEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String shopName;
+    private String name;
 
-/*    @ManyToOne
-    @JoinColumn(name = "shop_owner_id")
-    private UserEntity shopOwner;*/
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<StockEntity> stocks = new HashSet<>();
 
-
+    public static ShopEntity toShopEntity(ShopRequest shopRequest){
+        return ShopEntity.builder()
+                .name(shopRequest.getName())
+                .stocks(shopRequest.getStocks())
+                .build();
+    }
 }
-
-
-

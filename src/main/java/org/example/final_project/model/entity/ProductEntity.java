@@ -2,27 +2,32 @@ package org.example.final_project.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.final_project.model.request.ProductRequest;
 
-import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "products")
 public class ProductEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String productName;
+    private String name;
 
-    @Column(nullable = false, unique = true)
-    private String manufacturer;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<StockEntity> stocks = new HashSet<>();
 
-    @Column(nullable = false, unique = true)
-    private LocalDate manufactureDate;
+    public static ProductEntity toProductEntity(ProductRequest productRequest){
+        return ProductEntity.builder()
+                .name(productRequest.getName())
+                .stocks(productRequest.getStocks())
+                .build();
+    }
 }
