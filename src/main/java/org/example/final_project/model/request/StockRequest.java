@@ -10,8 +10,8 @@ import org.example.final_project.model.entity.ShopEntity;
 @NoArgsConstructor
 @Builder
 public class StockRequest {
-    private ProductEntity product;
-    private ShopEntity shop;
+    private Long productId;
+    private Long shopId;
     private Integer quantity;
     private Double price;
 }

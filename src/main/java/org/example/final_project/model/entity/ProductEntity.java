@@ -21,13 +21,12 @@ public class ProductEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product")
     private Set<StockEntity> stocks = new HashSet<>();
 
     public static ProductEntity toProductEntity(ProductRequest productRequest){
         return ProductEntity.builder()
                 .name(productRequest.getName())
-                .stocks(productRequest.getStocks())
                 .build();
     }
 }

@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "products")
+@Table(name = "shops")
 public class ShopEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,6 @@ public class ShopEntity {
     public static ShopEntity toShopEntity(ShopRequest shopRequest){
         return ShopEntity.builder()
                 .name(shopRequest.getName())
-                .stocks(shopRequest.getStocks())
                 .build();
     }
 }

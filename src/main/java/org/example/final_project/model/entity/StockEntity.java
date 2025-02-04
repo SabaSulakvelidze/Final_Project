@@ -11,7 +11,7 @@ import org.example.final_project.model.request.StockRequest;
 @Builder
 @EqualsAndHashCode
 @Entity
-@Table(name = "products")
+@Table(name = "stocks")
 public class StockEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +28,10 @@ public class StockEntity {
     private Integer quantity;
     private Double price;
 
-    public static StockEntity toStockEntity(StockRequest stockRequest){
+    public static StockEntity toStockEntity(StockRequest stockRequest, ProductEntity product, ShopEntity shop) {
         return StockEntity.builder()
-                .product(stockRequest.getProduct())
-                .shop(stockRequest.getShop())
+                .product(product)
+                .shop(shop)
                 .quantity(stockRequest.getQuantity())
                 .price(stockRequest.getPrice())
                 .build();
