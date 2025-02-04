@@ -1,10 +1,10 @@
 package org.example.final_project.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.final_project.model.request.ShopRequest;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -17,12 +17,15 @@ import java.util.Set;
 public class ShopEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "shop_id")
     private Long id;
 
+    @Basic
     private String name;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<StockEntity> stocks = new HashSet<>();
+    private Set<StockEntity> stocks;
 
     public static ShopEntity toShopEntity(ShopRequest shopRequest){
         return ShopEntity.builder()

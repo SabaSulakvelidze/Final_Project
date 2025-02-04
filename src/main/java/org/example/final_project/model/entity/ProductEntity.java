@@ -1,5 +1,6 @@
 package org.example.final_project.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.final_project.model.request.ProductRequest;
@@ -17,12 +18,15 @@ import java.util.Set;
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private Long id;
 
+    @Basic
     private String name;
 
-    @OneToMany(mappedBy = "product")
-    private Set<StockEntity> stocks = new HashSet<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<StockEntity> stocks;
 
     public static ProductEntity toProductEntity(ProductRequest productRequest){
         return ProductEntity.builder()
