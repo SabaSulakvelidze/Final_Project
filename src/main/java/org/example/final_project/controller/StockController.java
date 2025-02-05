@@ -35,28 +35,24 @@ public class StockController {
         return stockService.getAllStocks(pageNumber, pageSize, direction, sortBy).map(StockResponse::toStockResponse);
     }
 
-    @GetMapping("/getSingleStock/{stockId}")
-    public StockResponse getSingleStock(@PathVariable Long stockId) {
-        return StockResponse.toStockResponse(stockService.getStockById(stockId));
-    }
-
     @PostMapping("/createStock")
     public StockResponse createStock(@RequestBody @Valid StockRequest stockRequest) {
         ProductEntity productById = productService.getProductById(stockRequest.getProductId());
         ShopEntity shopById = shopService.getShopById(stockRequest.getShopId());
+
         return StockResponse.toStockResponse(stockService.addProductToShop(StockEntity.toStockEntity(stockRequest, productById, shopById)));
     }
 
-    @PutMapping("/editStock/{stockId}")
-    public StockResponse editStock(@PathVariable Long stockId, @RequestBody @Valid StockRequest stockRequest) {
-        ProductEntity productById = productService.getProductById(stockRequest.getProductId());
-        ShopEntity shopById = shopService.getShopById(stockRequest.getShopId());
-        return StockResponse.toStockResponse(stockService.editStock(stockId, StockEntity.toStockEntity(stockRequest, productById, shopById)));
+    @PutMapping("/editStock")
+    public StockResponse editStock(@RequestBody @Valid StockRequest stockRequest) {
+        StockEntity stockByShopIdAndProductId = stockService.getStockByShopIdAndProductId(stockRequest.getShopId(), stockRequest.getProductId());
+        return StockResponse.toStockResponse(stockService.editStock(StockEntity.toStockEntity(stockRequest,
+                stockByShopIdAndProductId.getProduct(), stockByShopIdAndProductId.getShop())));
     }
 
-    @DeleteMapping("/deleteStock/{stockId}")
-    public String deleteStock(@PathVariable Long stockId) {
-        return stockService.deleteStock(stockId);
+    @DeleteMapping("/deleteStock")
+    public String deleteStock(@RequestParam Long shopId, @RequestParam Long productId) {
+        return stockService.deleteStock(shopId, productId);
     }
 
 

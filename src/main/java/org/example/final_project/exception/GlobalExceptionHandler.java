@@ -16,6 +16,12 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler
+    public ResponseEntity<ExceptionBody> handleException(RuntimeException ex, HttpServletRequest request) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ExceptionBody exceptionBody = new ExceptionBody(List.of(ex.getMessage()), request.getRequestURI(), LocalDateTime.now(), httpStatus, List.of(ex.getStackTrace()).getLast());
+        return ResponseEntity.status(httpStatus).body(exceptionBody);
+    }
+    @ExceptionHandler
     public ResponseEntity<ExceptionBody> handleException(Exception ex, HttpServletRequest request) {
         HttpStatus httpStatus = HttpStatus.FORBIDDEN;
         ExceptionBody exceptionBody = new ExceptionBody(List.of(ex.getMessage()), request.getRequestURI(), LocalDateTime.now(), httpStatus, List.of(ex.getStackTrace()).getLast());

@@ -17,13 +17,11 @@ import java.util.Set;
 public class ShopResponse {
     private Long id;
     private String name;
-    private Set<StockEntity> stocks = new HashSet<>();
 
     public static ShopResponse toShopResponse(ShopEntity shopEntity){
         return ShopResponse.builder()
                 .id(shopEntity.getId())
                 .name(shopEntity.getName())
-                .stocks(shopEntity.getStocks())
                 .build();
     }
 }

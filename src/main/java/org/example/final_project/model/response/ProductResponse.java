@@ -16,12 +16,11 @@ import java.util.Set;
 public class ProductResponse {
     private Long id;
     private String name;
-    private Set<StockEntity> stocks = new HashSet<>();
 
     public static ProductResponse toProductResponse(ProductEntity productEntity) {
-        return new ProductResponse(
-                productEntity.getId(),
-                productEntity.getName(),
-                productEntity.getStocks());
+        return ProductResponse.builder()
+                .id(productEntity.getId())
+                .name(productEntity.getName())
+                .build();
     }
 }

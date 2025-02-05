@@ -1,8 +1,7 @@
 package org.example.final_project.model.response;
 
 import lombok.*;
-import org.example.final_project.model.entity.ProductEntity;
-import org.example.final_project.model.entity.ShopEntity;
+import org.example.final_project.model.ProductShopId;
 import org.example.final_project.model.entity.StockEntity;
 
 @Getter
@@ -11,17 +10,17 @@ import org.example.final_project.model.entity.StockEntity;
 @NoArgsConstructor
 @Builder
 public class StockResponse {
-    private Long id;
-    private ProductEntity product;
-    private ShopEntity shop;
+    private ProductShopId productShopId;
+    private ProductResponse product;
+    private ShopResponse shop;
     private Integer quantity;
     private Double price;
 
     public static StockResponse toStockResponse(StockEntity stockEntity){
         return StockResponse.builder()
-                .id(stockEntity.getId())
-                .product(stockEntity.getProduct())
-                .shop(stockEntity.getShop())
+                .productShopId(stockEntity.getProductShopId())
+                .product(ProductResponse.builder().id(stockEntity.getProduct().getId()).name(stockEntity.getProduct().getName()).build())
+                .shop(ShopResponse.builder().id(stockEntity.getShop().getId()).name(stockEntity.getShop().getName()).build())
                 .quantity(stockEntity.getQuantity())
                 .price(stockEntity.getPrice())
                 .build();

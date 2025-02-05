@@ -21,18 +21,15 @@ public class StockService {
         return stockRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
     }
 
-    public StockEntity getStockById(Long stockId) {
-        return stockRepository.findById(stockId)
-                .orElseThrow(() -> new ResourceNotFoundException("stock with id %d was not found".formatted(stockId)));
-    }
-
     public StockEntity addProductToShop(StockEntity stockEntity) {
-        return stockRepository.save(stockEntity);
+        StockEntity stockByShopIdAndProductId = getStockByShopIdAndProductId(stockEntity.getShop().getId(), stockEntity.getProduct().getId());
+        if (stockByShopIdAndProductId != null) throw new RuntimeException("stock with shopId %d and productId %d already exists".formatted(stockEntity.getShop().getId(), stockEntity.getProduct().getId()));
+        else return stockRepository.save(stockEntity);
     }
 
     @Transactional
-    public StockEntity editStock(Long stockId, StockEntity stockEntity) {
-        StockEntity stockToEdit = getStockById(stockId);
+    public StockEntity editStock(StockEntity stockEntity) {
+        StockEntity stockToEdit = getStockByShopIdAndProductId(stockEntity.getProduct().getId(), stockEntity.getShop().getId());
         stockToEdit.setProduct(stockEntity.getProduct());
         stockToEdit.setShop(stockEntity.getShop());
         stockToEdit.setQuantity(stockEntity.getQuantity());
@@ -40,11 +37,10 @@ public class StockService {
         return stockToEdit;
     }
 
-    public String deleteStock(Long stockId) {
-        stockRepository.delete(getStockById(stockId));
-        return "stock with id %d was deleted successfully".formatted(stockId);
+    public String deleteStock(Long productId, Long ShopId) {
+        stockRepository.delete(getStockByShopIdAndProductId(productId, ShopId));
+        return "stock was deleted successfully";
     }
-
 
 
     public Page<StockEntity> getStockByShopId(Long shopId, Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
@@ -56,14 +52,16 @@ public class StockService {
     }
 
     public StockEntity getStockByShopIdAndProductId(Long shopId, Long productId) {
-        return stockRepository.findStockEntitiesByShopIdAndProductId(shopId, productId);
+        return stockRepository.findStockEntitiesByShopIdAndProductId(shopId, productId)
+                .orElseThrow(() -> new ResourceNotFoundException("stock for shopId %d and productId %d was not found".formatted(shopId, productId)));
     }
 
     @Transactional
     public StockEntity purchaseProduct(Long shopId, Long productId, Integer desiredQuantity) {
         StockEntity stock = getStockByShopIdAndProductId(shopId, productId);
         if (stock.getQuantity() >= desiredQuantity) stock.setQuantity(stock.getQuantity() - desiredQuantity);
-        else throw new OutOfStockException("you're trying to purchase %d item(s), item(s) in stock; %d".formatted(desiredQuantity,stock.getQuantity()));
+        else
+            throw new OutOfStockException("you're trying to purchase %d item(s), item(s) in stock; %d".formatted(desiredQuantity, stock.getQuantity()));
         return stock;
     }
 }

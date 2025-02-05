@@ -3,6 +3,7 @@ package org.example.final_project.model.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.final_project.model.ProductShopId;
 import org.example.final_project.model.request.StockRequest;
 
 @Getter
@@ -14,17 +15,18 @@ import org.example.final_project.model.request.StockRequest;
 @Entity
 @Table(name = "stocks")
 public class StockEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private ProductShopId productShopId;
 
     @JsonBackReference
     @ManyToOne
+    @MapsId("productId")
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 
     @JsonBackReference
     @ManyToOne
+    @MapsId("shopId")
     @JoinColumn(name = "shop_id", nullable = false)
     private ShopEntity shop;
 
@@ -33,6 +35,7 @@ public class StockEntity {
 
     public static StockEntity toStockEntity(StockRequest stockRequest, ProductEntity product, ShopEntity shop) {
         return StockEntity.builder()
+                .productShopId(ProductShopId.builder().productId(product.getId()).shopId(shop.getId()).build())
                 .product(product)
                 .shop(shop)
                 .quantity(stockRequest.getQuantity())

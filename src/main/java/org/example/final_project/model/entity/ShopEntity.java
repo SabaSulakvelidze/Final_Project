@@ -21,6 +21,7 @@ public class ShopEntity {
     private Long id;
 
     @Basic
+    @Column(nullable = false, unique = true)
     private String name;
 
     @JsonManagedReference
