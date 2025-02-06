@@ -33,6 +33,7 @@ public class OrderHistoryResponse {
                 .shop(ShopResponse.toShopResponse(orderHistoryEntity.getShop()))
                 .quantityBought(orderHistoryEntity.getQuantityBought())
                 .totalPrice(orderHistoryEntity.getTotalPrice())
+                .purchaseDate(orderHistoryEntity.getPurchaseDate())
                 .build();
     }
 }

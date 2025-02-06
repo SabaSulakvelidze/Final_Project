@@ -1,6 +1,7 @@
 package org.example.final_project.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.final_project.configuration.CustomLogger;
 import org.example.final_project.exception.OutOfStockException;
 import org.example.final_project.exception.ResourceNotFoundException;
 import org.example.final_project.model.entity.OrderHistoryEntity;
@@ -66,6 +67,7 @@ public class StockService {
                 .orElseThrow(() -> new ResourceNotFoundException("stock for shopId %d and productId %d was not found".formatted(shopId, productId)));
     }
 
+    @CustomLogger
     @Transactional
     public StockEntity purchaseProduct(Long shopId, Long productId, Integer desiredQuantity) {
         StockEntity stock = getStockByShopIdAndProductId(shopId, productId);

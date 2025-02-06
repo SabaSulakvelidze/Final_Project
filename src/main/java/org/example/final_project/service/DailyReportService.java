@@ -1,6 +1,7 @@
 package org.example.final_project.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.final_project.configuration.CustomLogger;
 import org.example.final_project.model.entity.DailyReportEntity;
 import org.example.final_project.model.entity.OrderHistoryEntity;
 import org.example.final_project.model.entity.ShopEntity;
@@ -28,6 +29,7 @@ public class DailyReportService {
         return dailyReportRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
     }
 
+    @CustomLogger
     @Scheduled(cron = "0 10 16 * * *")
     public void generateDailyReport() {
         List<OrderHistoryEntity> dailyPurchases = orderHistoryRepository
