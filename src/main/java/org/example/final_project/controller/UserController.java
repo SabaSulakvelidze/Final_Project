@@ -1,5 +1,7 @@
 package org.example.final_project.controller;
 
+import lombok.RequiredArgsConstructor;
+import org.example.final_project.model.response.ShopResponse;
 import org.example.final_project.service.UserService;
 import org.example.final_project.model.entity.UserEntity;
 import org.example.final_project.model.enums.Role;
@@ -10,6 +12,8 @@ import org.example.final_project.model.response.UserResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +22,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/Users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @PostConstruct
     public void initAdminUser(){
@@ -63,10 +64,19 @@ public class UserController {
 
     @PutMapping("/changeUserStatus/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @SecurityRequirement(name = "bearerAuth")
+    //@SecurityRequirement(name = "bearerAuth")
     public UserResponse changeUserStatus(@PathVariable("userId") Long userId,
                                          @RequestParam("userStatus")UserStatus userStatus) {
        return UserResponse.toUserResponse(userService.changeUserStatus(userId,userStatus));
+    }
+
+    @GetMapping("/getAllUsers")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public Page<UserResponse> getAllUsers(@RequestParam(defaultValue = "0") Integer pageNumber,
+                                          @RequestParam(defaultValue = "5") Integer pageSize,
+                                          @RequestParam(defaultValue = "ASC") Sort.Direction direction,
+                                          @RequestParam(defaultValue = "id") String sortBy){
+        return userService.getAllUsers(pageNumber, pageSize, direction, sortBy).map(UserResponse::toUserResponse);
     }
 
 }

@@ -2,6 +2,7 @@ package org.example.final_project.service;
 
 import org.example.final_project.exception.InvalidUserException;
 import org.example.final_project.exception.ResourceNotFoundException;
+import org.example.final_project.model.entity.OrderHistoryEntity;
 import org.example.final_project.model.entity.UserEntity;
 import org.example.final_project.model.enums.UserStatus;
 import org.example.final_project.repository.UserRepository;
@@ -10,9 +11,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -69,9 +74,14 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User with id %d was not found".formatted(userId)));
     }
 
+    @Transactional
     public UserEntity changeUserStatus(Long userId, UserStatus userStatus) {
         UserEntity userEntity = getUserById(userId);
         userEntity.setUserStatus(userStatus);
-        return userEntity;
+        return userRepository.save(userEntity);
+    }
+
+    public Page<UserEntity> getAllUsers(Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy){
+        return userRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
     }
 }
