@@ -1,8 +1,7 @@
 package org.example.final_project.model.request;
 
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
-import org.example.final_project.model.entity.ProductEntity;
-import org.example.final_project.model.entity.ShopEntity;
 
 @Getter
 @Setter
@@ -12,6 +11,8 @@ import org.example.final_project.model.entity.ShopEntity;
 public class StockRequest {
     private Long productId;
     private Long shopId;
+    @PositiveOrZero
     private Integer quantity;
+    @PositiveOrZero
     private Double price;
 }

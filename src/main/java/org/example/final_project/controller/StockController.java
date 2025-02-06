@@ -1,10 +1,9 @@
 package org.example.final_project.controller;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.example.final_project.Service.ProductService;
-import org.example.final_project.Service.ShopService;
-import org.example.final_project.Service.StockService;
+import org.example.final_project.service.ProductService;
+import org.example.final_project.service.ShopService;
+import org.example.final_project.service.StockService;
 import org.example.final_project.model.entity.ProductEntity;
 import org.example.final_project.model.entity.ShopEntity;
 import org.example.final_project.model.entity.StockEntity;

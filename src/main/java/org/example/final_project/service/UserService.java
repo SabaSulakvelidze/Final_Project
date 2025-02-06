@@ -1,0 +1,77 @@
+package org.example.final_project.service;
+
+import org.example.final_project.exception.InvalidUserException;
+import org.example.final_project.exception.ResourceNotFoundException;
+import org.example.final_project.model.entity.UserEntity;
+import org.example.final_project.model.enums.UserStatus;
+import org.example.final_project.repository.UserRepository;
+import org.example.final_project.security.CustomAuthentication;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.UUID;
+
+@Service
+public class UserService {
+
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private static final String secret = UUID.randomUUID().toString();
+
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+    }
+
+    public String logIn(String username, String password) {
+        UserEntity userEntity = userRepository.findFirstByUserNameEquals(username)
+                .orElseThrow(() -> new InvalidUserException("UserName or Password is incorrect!"));
+        if (!passwordEncoder.matches(password, userEntity.getPassword())) throw new InvalidUserException("UserName or Password is incorrect!");
+
+        return Jwts.builder()
+                .claim("username", userEntity.getUserName())
+                .claim("id", userEntity.getId())
+                .claim("role", userEntity.getRole().toString())
+                .issuedAt(Date.from(Instant.now()))
+                .expiration(Date.from(Instant.now().plus(30, ChronoUnit.MINUTES)))
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .compact();
+    }
+
+    public Authentication authenticate(String token) {
+        Jws<Claims> claimsJws = Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .build()
+                .parseSignedClaims(token);
+
+        Claims payload = claimsJws.getPayload();
+        Long id = payload.get("id", Long.class);
+        String username = payload.get("username", String.class);
+        String role = payload.get("role", String.class);
+        return new CustomAuthentication(id,role, username);
+    }
+
+    public UserEntity registerUser(UserEntity userEntity){
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        return userRepository.save(userEntity);
+    }
+
+    public UserEntity getUserById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id %d was not found".formatted(userId)));
+    }
+
+    public UserEntity changeUserStatus(Long userId, UserStatus userStatus) {
+        UserEntity userEntity = getUserById(userId);
+        userEntity.setUserStatus(userStatus);
+        return userEntity;
+    }
+}

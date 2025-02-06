@@ -1,4 +1,4 @@
-package org.example.final_project.Service;
+package org.example.final_project.service;
 
 
 import lombok.RequiredArgsConstructor;

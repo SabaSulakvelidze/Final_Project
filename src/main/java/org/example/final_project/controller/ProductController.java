@@ -1,8 +1,7 @@
 package org.example.final_project.controller;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.example.final_project.Service.ProductService;
+import org.example.final_project.service.ProductService;
 import org.example.final_project.model.entity.ProductEntity;
 import org.example.final_project.model.request.ProductRequest;
 import org.example.final_project.model.response.ProductResponse;
