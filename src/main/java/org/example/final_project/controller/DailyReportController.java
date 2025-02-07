@@ -27,4 +27,10 @@ public class DailyReportController {
                                                    @RequestParam(defaultValue = "id") String sortBy) {
         return dailyReportService.getAllReports(pageNumber, pageSize, direction, sortBy).map(DailyReportResponse::toDailyReportResponse);
     }
+
+    @GetMapping("/generateDailyReport")
+    public void generateDailyReport(){
+        dailyReportService.generateDailyReport();
+    }
+
 }

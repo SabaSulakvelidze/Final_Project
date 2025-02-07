@@ -2,7 +2,6 @@ package org.example.final_project.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.final_project.service.OrderHistoryService;
 import org.example.final_project.service.ProductService;
 import org.example.final_project.service.ShopService;
 import org.example.final_project.service.StockService;

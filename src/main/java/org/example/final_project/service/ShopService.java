@@ -29,14 +29,17 @@ public class ShopService {
     }
 
     public ShopEntity editShop(Long shopId, ShopEntity shopEntity){
-        ShopEntity shopToEdit = getShopById(shopId);
+        ShopEntity shopToEdit = shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResourceNotFoundException("shop with id %d was not found".formatted(shopId)));
         shopToEdit.setName(shopEntity.getName());
         shopToEdit.setStocks(shopEntity.getStocks());
         return shopToEdit;
     }
 
     public String deleteShop(Long shopId){
-        shopRepository.delete(getShopById(shopId));
+        ShopEntity shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResourceNotFoundException("shop with id %d was not found".formatted(shopId)));
+        shopRepository.delete(shop);
         return "shop with id %d was deleted successfully".formatted(shopId);
     }
 }
