@@ -30,8 +30,4 @@ public class UserRequest {
     @NotNull(message = "role can not be null")
     @Enumerated(EnumType.STRING)
     private UserRole role;
-
-    @NotNull(message = "status can not be null")
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;
 }

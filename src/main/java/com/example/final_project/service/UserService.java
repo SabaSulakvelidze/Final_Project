@@ -66,6 +66,7 @@ public class UserService {
 
     public UserEntity registerUser(UserEntity userEntity) {
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userEntity.setUserStatus(UserStatus.PENDING);
         return userRepository.save(userEntity);
     }
 

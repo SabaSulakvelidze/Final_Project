@@ -41,7 +41,6 @@ public class UserEntity {
                 .password(userRequest.getPassword())
                 .email(userRequest.getEmail())
                 .role(userRequest.getRole())
-                .userStatus(userRequest.getStatus())
                 .build();
     }
 }
