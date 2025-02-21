@@ -31,7 +31,7 @@ public class UserEntity {
     private UserRole role;
 
     @Column(nullable = false)
-    private UserStatus status;
+    private UserStatus userStatus;
 
     public static UserEntity toUserEntity(UserRequest userRequest){
         return UserEntity.builder()
@@ -39,7 +39,7 @@ public class UserEntity {
                 .password(userRequest.getPassword())
                 .email(userRequest.getEmail())
                 .role(userRequest.getRole())
-                .status(userRequest.getStatus())
+                .userStatus(userRequest.getStatus())
                 .build();
     }
 }

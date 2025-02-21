@@ -24,7 +24,7 @@ public class UserResponse {
                 .username(userEntity.getUsername())
                 .email(userEntity.getEmail())
                 .role(userEntity.getRole())
-                .status(userEntity.getStatus())
+                .status(userEntity.getUserStatus())
                 .build();
     }
 }
