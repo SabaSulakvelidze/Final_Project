@@ -28,9 +28,11 @@ public class UserEntity {
     private String email;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
     public static UserEntity toUserEntity(UserRequest userRequest){
