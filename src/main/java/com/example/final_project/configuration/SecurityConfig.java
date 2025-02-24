@@ -1,4 +1,4 @@
-package com.example.final_project.security;
+package com.example.final_project.configuration;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -23,22 +23,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   //@Qualifier("userAuthenticationFilter") OncePerRequestFilter authenticationProcessingFilter,
                                                    @Qualifier("jwtBasedAuthenticationFilter") OncePerRequestFilter jwtBasedAuthenticationFilter
     ) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtBasedAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(customizer -> customizer
-                        .requestMatchers("/Users/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(WHITE_LIST_URL).permitAll()
-                        //.requestMatchers("/**").hasRole(Role.ADMIN.getName())
-
                         .anyRequest().authenticated())
-                /*.sessionManagement(x -> x
-                        .maximumSessions(1)
-                        .expiredUrl("/session-expired"))*/
                 .build();
     }
 }
