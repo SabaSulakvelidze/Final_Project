@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,7 +20,8 @@ import java.time.LocalDateTime;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(name = "username", unique = true, nullable = false)
     private String username;
@@ -47,8 +49,14 @@ public class UserEntity {
     @Column(name = "verification_code")
     private String verificationCode;
 
-    @Column(name = "ver_codde_exp_date")
+    @Column(name = "ver_code_exp_date")
     private LocalDateTime verificationCodeExpDate;
+
+    @OneToMany(mappedBy = "author")
+    private List<MusicEntity> musicList;
+
+    @OneToMany(mappedBy = "owner")
+    private List<PlaylistEntity> playlists;
 
     public static UserEntity toUserEntity(UserRequest userRequest){
         return UserEntity.builder()

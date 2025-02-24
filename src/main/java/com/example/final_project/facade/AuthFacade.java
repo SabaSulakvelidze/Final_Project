@@ -53,7 +53,7 @@ public class AuthFacade {
 
         return Jwts.builder()
                 .claim("username", userEntity.getUsername())
-                .claim("id", userEntity.getId())
+                .claim("id", userEntity.getUserId())
                 .claim("role", userEntity.getUserRole().toString())
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(Instant.now().plus(30, ChronoUnit.MINUTES)))

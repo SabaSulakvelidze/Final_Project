@@ -23,7 +23,7 @@ public class UserResponse {
 
     public static UserResponse toUserResponse(UserEntity userEntity){
         return UserResponse.builder()
-                .id(userEntity.getId())
+                .id(userEntity.getUserId())
                 .username(userEntity.getUsername())
                 .email(userEntity.getEmail())
                 .role(userEntity.getUserRole())
