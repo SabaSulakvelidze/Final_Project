@@ -1,0 +1,36 @@
+package com.example.final_project.model.enums;
+
+public enum MusicGenre {
+    ROCK,
+    POP,
+    JAZZ,
+    BLUES,
+    HIP_HOP,
+    RAP,
+    CLASSICAL,
+    ELECTRONIC,
+    HOUSE,
+    TECHNO,
+    TRANCE,
+    REGGAE,
+    COUNTRY,
+    METAL,
+    PUNK,
+    SOUL,
+    FUNK,
+    DISCO,
+    FOLK,
+    LATIN,
+    R_AND_B,  // R&B
+    GOSPEL,
+    OPERA,
+    K_POP,
+    J_POP,
+    AFROBEATS,
+    INDIE,
+    GRUNGE,
+    SKA,
+    AMBIENT,
+    LOFI,
+    SOUNDTRACK
+}
