@@ -1,10 +1,11 @@
 package com.example.final_project.security;
 
+import com.example.final_project.facade.AuthFacade;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import com.example.final_project.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -14,13 +15,11 @@ import java.io.IOException;
 
 @Component
 @Qualifier("jwtBasedAuthenticationFilter")
+@RequiredArgsConstructor
 public class JwtBasedAuthenticationFilter extends OncePerRequestFilter {
 
-    private final UserService userService;
+    private final AuthFacade authFacade;
 
-    public JwtBasedAuthenticationFilter(UserService userService) {
-        this.userService = userService;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -31,7 +30,7 @@ public class JwtBasedAuthenticationFilter extends OncePerRequestFilter {
         }
         SecurityContextHolder
                 .getContext()
-                .setAuthentication(userService.authenticate(authenticationHeader.replace("Bearer ", "")));
+                .setAuthentication(authFacade.authenticate(authenticationHeader.replace("Bearer ", "")));
         filterChain.doFilter(request, response);
     }
 }
