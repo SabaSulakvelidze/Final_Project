@@ -1,4 +1,4 @@
-package com.example.final_project.configuration;
+package com.example.final_project.component;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Component
 public class LoggingAspect {
 
-    @Pointcut("@annotation(com.example.final_project.configuration.CustomLogger)")
+    @Pointcut("@annotation(com.example.final_project.annotation.CustomLogger)")
     private void customLogger() {
     }
 
