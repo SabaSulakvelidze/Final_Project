@@ -1,4 +1,4 @@
-package com.example.final_project.configuration;
+package com.example.final_project.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
