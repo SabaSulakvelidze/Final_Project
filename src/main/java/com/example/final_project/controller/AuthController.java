@@ -34,15 +34,15 @@ public class AuthController {
     }
 
     @PostMapping("/verify")
-    public UserResponse verifyUser(@RequestParam("userEmail") String userEmail,
+    public ResponseEntity<String> verifyUser(@RequestParam("userEmail") String userEmail,
                                    @RequestParam("verificationCode") String verificationCode) {
-        return UserResponse.toUserResponse(authFacade.verifyUser(userEmail, verificationCode));
+        return ResponseEntity.ok(authFacade.verifyUser(userEmail, verificationCode));
     }
 
     @GetMapping("/resendVerificationCode")
     public ResponseEntity<String> resendVerificationCode(@RequestParam("userEmail") String userEmail) {
         authFacade.resendVerificationCode(userEmail);
-        return ResponseEntity.status(HttpStatus.OK).body("Email with verification code was sent!");
+        return ResponseEntity.status(HttpStatus.OK).body("Email with verification code was sent to: %s".formatted(userEmail));
     }
 
 }
