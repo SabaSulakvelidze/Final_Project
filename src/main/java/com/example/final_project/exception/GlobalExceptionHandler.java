@@ -71,13 +71,14 @@ public class GlobalExceptionHandler {
 
 
     //-----------------------------------Custom exceptions-----------------------------------
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ExceptionBody> handleCustomException(HttpStatus httpStatus, CustomException ex, HttpServletRequest request) {
-        return ResponseEntity.status(httpStatus).body(ExceptionBody.builder()
-                .message(List.of(ex.getMessage()))
-                .endpoint(request.getRequestURI())
-                .timestamp(LocalDateTime.now())
-                .build());
+    @ExceptionHandler
+    public ResponseEntity<ExceptionBody> handleCustomException(CustomException ex, HttpServletRequest request) {
+        return ResponseEntity.status(ex.getStatus())
+                .body(ExceptionBody.builder()
+                        .message(List.of(ex.getMessage()))
+                        .endpoint(request.getRequestURI())
+                        .timestamp(LocalDateTime.now())
+                        .build());
     }
 
 }
