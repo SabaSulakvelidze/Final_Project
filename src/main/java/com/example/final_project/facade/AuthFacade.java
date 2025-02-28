@@ -48,6 +48,10 @@ public class AuthFacade {
 
     public String signIn(String username, String password) {
         UserEntity userEntity = userService.findFirstByUsernameEquals(username);
+        if (userEntity.getUserStatus() == UserStatus.PENDING)
+            throw new CustomException(HttpStatus.BAD_REQUEST, "User is not activated");
+        else if (userEntity.getUserStatus() == UserStatus.BLOCKED)
+            throw new CustomException(HttpStatus.FORBIDDEN, "User is blocked! contact admin");
         if (!passwordEncoder.matches(password, userEntity.getPassword()))
             throw new CustomException(HttpStatus.FORBIDDEN, "UserName or Password is incorrect!");
 
@@ -80,11 +84,12 @@ public class AuthFacade {
         userEntity.setCreated(LocalDateTime.now());
         userEntity.setVerificationCode(Utils.generateVerificationCode());
         userEntity.setVerificationCodeExpDate(LocalDateTime.now().plusMinutes(30));
+
         sendVerificationCode(userEntity);
-        return userService.saveAndFlush(userEntity);
+        return userService.save(userEntity);
     }
 
-    public UserEntity verifyUser(String userEmail, String verificationCode) {
+    public String verifyUser(String userEmail, String verificationCode) {
         UserEntity userEntity = userService.findUserByEmail(userEmail);
         if (userEntity.getUserStatus() == UserStatus.ACTIVE)
             throw new CustomException(HttpStatus.FORBIDDEN, "User is already active.");
@@ -100,7 +105,8 @@ public class AuthFacade {
         userEntity.setVerificationCode(null);
         userEntity.setVerificationCodeExpDate(null);
         userEntity.setUserStatus(UserStatus.ACTIVE);
-        return userService.saveAndFlush(userEntity);
+        userService.save(userEntity);
+        return "user %s verified".formatted(userEntity.getUsername());
     }
 
     public void resendVerificationCode(String userEmail) {
@@ -109,7 +115,7 @@ public class AuthFacade {
             throw new CustomException(HttpStatus.FORBIDDEN, "User is already active.");
         userEntity.setVerificationCode(Utils.generateVerificationCode());
         userEntity.setVerificationCodeExpDate(LocalDateTime.now().plusMinutes(30));
-        sendVerificationCode(userService.saveAndFlush(userEntity));
+        sendVerificationCode(userService.save(userEntity));
     }
 
     public void sendVerificationCode(UserEntity userEntity) {
@@ -129,12 +135,8 @@ public class AuthFacade {
                 </body>
                 </html>
                 """.formatted(verificationCode);
+        mailSenderService.sendVerificationEmail(userEntity.getEmail(), subject, htmlMessage);
 
-        try {
-            mailSenderService.sendVerificationEmail(userEntity.getEmail(), subject, htmlMessage);
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
     }
 
 
