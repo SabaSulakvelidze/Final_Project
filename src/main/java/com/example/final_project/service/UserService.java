@@ -2,7 +2,6 @@ package com.example.final_project.service;
 
 import com.example.final_project.exception.CustomException;
 import com.example.final_project.model.entity.UserEntity;
-import com.example.final_project.model.enums.UserStatus;
 import com.example.final_project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,10 +21,6 @@ public class UserService {
 
     public UserEntity save(UserEntity userEntity) {
         return userRepository.save(userEntity);
-    }
-
-    public UserEntity saveAndFlush(UserEntity userEntity) {
-        return userRepository.saveAndFlush(userEntity);
     }
 
     public UserEntity findFirstByUsernameEquals(String username) {
