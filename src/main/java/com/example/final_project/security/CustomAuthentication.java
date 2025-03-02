@@ -36,17 +36,17 @@ public class CustomAuthentication implements Authentication {
 
     @Override
     public Object getCredentials() {
-        return null;
+        return username;
     }
 
     @Override
     public Object getDetails() {
-        return id;
+        return null;
     }
 
     @Override
     public Object getPrincipal() {
-        return username;
+        return id;
     }
 
     @Override
