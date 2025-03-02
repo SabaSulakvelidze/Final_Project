@@ -43,6 +43,11 @@ public class Utils {
         return (Long) authentication.getPrincipal();
     }
 
+    public static String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (String) authentication.getCredentials();
+    }
+
 
     public static String generateVerificationCode() {
         return IntStream.range(0, 8)
