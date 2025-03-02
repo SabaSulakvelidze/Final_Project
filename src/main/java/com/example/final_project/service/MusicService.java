@@ -37,8 +37,9 @@ public class MusicService {
     public MusicEntity updateMusicById(Long musicId, MusicEntity updatedMusic) {
         return musicRepository.findById(musicId).map(existingMusic -> {
             if (updatedMusic.getMusicName() != null) existingMusic.setMusicName(updatedMusic.getMusicName());
-            if(updatedMusic.getGenre() != null) existingMusic.setGenre(updatedMusic.getGenre());
-            if(updatedMusic.getAlbum() != null) existingMusic.setAlbum(updatedMusic.getAlbum());
+            if (updatedMusic.getGenre() != null) existingMusic.setGenre(updatedMusic.getGenre());
+            if (updatedMusic.getAuthor() != null) existingMusic.setAuthor(updatedMusic.getAuthor());
+            if (updatedMusic.getAlbum() != null) existingMusic.setAlbum(updatedMusic.getAlbum());
             return existingMusic;
         }).orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Music with id %d was not found".formatted(musicId)));
     }
