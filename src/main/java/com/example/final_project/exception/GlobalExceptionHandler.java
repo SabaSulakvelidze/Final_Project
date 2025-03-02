@@ -1,6 +1,7 @@
 package com.example.final_project.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ExceptionBody> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ExceptionBody.builder()
-                .message(List.of(ex.getMessage()))
+                .message(ex.getFieldErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList())
                 .endpoint(request.getRequestURI())
                 .timestamp(LocalDateTime.now())
                 .build());
