@@ -1,8 +1,13 @@
 package com.example.final_project.model.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,4 +21,6 @@ public class PlaylistRequest {
 
     @Size(min = 20, max = 256, message = "Description must contain between 20-256 characters")
     private String playlistDescription;
+
+    private List<@NotNull @Positive(message = "ID must be positive")Long> musicIdList = new ArrayList<>();
 }
