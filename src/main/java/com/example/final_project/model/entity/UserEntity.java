@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -29,7 +30,7 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "user_role", nullable = false)
@@ -53,12 +54,12 @@ public class UserEntity {
     private LocalDateTime verificationCodeExpDate;
 
     @OneToMany(mappedBy = "author")
-    private List<MusicEntity> musicList;
+    private List<MusicEntity> musicList = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner")
-    private List<PlaylistEntity> playlists;
+    private List<PlaylistEntity> playlists = new ArrayList<>();
 
-    public static UserEntity toUserEntity(UserRequest userRequest){
+    public static UserEntity toUserEntity(UserRequest userRequest) {
         return UserEntity.builder()
                 .username(userRequest.getUserName())
                 .password(userRequest.getPassword())

@@ -3,6 +3,7 @@ package com.example.final_project.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -22,5 +23,5 @@ public class AlbumEntity {
     private String albumName;
 
     @OneToMany(mappedBy = "album")
-    private List<MusicEntity> musicList;
+    private List<MusicEntity> musicList = new ArrayList<>();
 }
