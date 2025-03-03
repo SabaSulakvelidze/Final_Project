@@ -24,5 +24,8 @@ public class MusicRequest {
     private MusicGenre genre;
 
     @Positive(message = "id must be positive")
-    private Long album_id;
+    private Long authorId;
+
+    @Positive(message = "id must be positive")
+    private Long albumId;
 }
