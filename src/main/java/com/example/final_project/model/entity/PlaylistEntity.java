@@ -3,7 +3,6 @@ package com.example.final_project.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class PlaylistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "playlist_id")
-    private Long playlistId;
+    private Long id;
 
     private String playlistName;
 

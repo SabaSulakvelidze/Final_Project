@@ -19,7 +19,7 @@ public class MusicEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "music_id")
-    private Long musicId;
+    private Long id;
 
     @Column(name = "music_name", nullable = false, unique = true)
     private String musicName;
@@ -38,14 +38,6 @@ public class MusicEntity {
 
     @ManyToMany(mappedBy = "musicList")
     private List<PlaylistEntity> playlists = new ArrayList<>();
-
-    public static MusicEntity toMusicEntity(MusicRequest musicRequest, UserEntity author) {
-        return MusicEntity.builder()
-                .musicName(musicRequest.getMusicName())
-                .genre(musicRequest.getGenre())
-                .author(author)
-                .build();
-    }
 
     public static MusicEntity toMusicEntity(MusicRequest musicRequest, UserEntity author, AlbumEntity album) {
         return MusicEntity.builder()

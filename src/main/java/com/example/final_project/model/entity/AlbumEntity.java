@@ -17,7 +17,7 @@ public class AlbumEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "album_id")
-    private Long albumId;
+    private Long id;
 
     @Column(name = "album_name", nullable = false, unique = true)
     private String albumName;

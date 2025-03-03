@@ -1,6 +1,5 @@
 package com.example.final_project.model.entity;
 
-import com.example.final_project.component.Utils;
 import com.example.final_project.model.enums.UserRole;
 import com.example.final_project.model.enums.UserStatus;
 import com.example.final_project.model.request.UserRequest;
@@ -22,7 +21,7 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private Long userId;
+    private Long id;
 
     @Column(name = "username", unique = true, nullable = false)
     private String username;
@@ -40,12 +39,6 @@ public class UserEntity {
     @Column(name = "user_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
-
-    @Column(name = "create_date", nullable = false)
-    public LocalDateTime created;
-
-    @Column(name = "modify_date")
-    public LocalDateTime modified;
 
     @Column(name = "verification_code")
     private String verificationCode;
