@@ -19,9 +19,9 @@ public class AlbumResponse {
 
     public static AlbumResponse toAlbumResponse(AlbumEntity albumEntity) {
         HashMap<Long, String> musicMap = albumEntity.getMusicList().stream()
-                .collect(Collectors.toMap(MusicEntity::getMusicId, MusicEntity::getMusicName, (existing, replacement) -> existing, HashMap::new));
+                .collect(Collectors.toMap(MusicEntity::getId, MusicEntity::getMusicName, (existing, replacement) -> existing, HashMap::new));
         return AlbumResponse.builder()
-                .albumId(albumEntity.getAlbumId())
+                .albumId(albumEntity.getId())
                 .title(albumEntity.getAlbumName())
                 .musicList(musicMap)
                 .build();

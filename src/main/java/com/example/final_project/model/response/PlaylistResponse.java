@@ -21,9 +21,9 @@ public class PlaylistResponse {
 
     public static PlaylistResponse toPlaylistResponse(PlaylistEntity playlistEntity) {
         HashMap<Long, String> plMap = playlistEntity.getMusicList().stream()
-                .collect(Collectors.toMap(MusicEntity::getMusicId, MusicEntity::getMusicName, (existing, replacement) -> existing, HashMap::new));
+                .collect(Collectors.toMap(MusicEntity::getId, MusicEntity::getMusicName, (existing, replacement) -> existing, HashMap::new));
         return PlaylistResponse.builder()
-                .playlistId(playlistEntity.getPlaylistId())
+                .playlistId(playlistEntity.getId())
                 .playlistName(playlistEntity.getPlaylistName())
                 .playlistDescription(playlistEntity.getPlaylistDescription())
                 .musicList(plMap)

@@ -18,18 +18,14 @@ public class UserResponse {
     private String email;
     private UserRole role;
     private UserStatus status;
-    private LocalDateTime created;
-    private LocalDateTime modified;
 
     public static UserResponse toUserResponse(UserEntity userEntity){
         return UserResponse.builder()
-                .id(userEntity.getUserId())
+                .id(userEntity.getId())
                 .username(userEntity.getUsername())
                 .email(userEntity.getEmail())
                 .role(userEntity.getUserRole())
                 .status(userEntity.getUserStatus())
-                .created(userEntity.getCreated())
-                .modified(userEntity.getModified())
                 .build();
     }
 }
