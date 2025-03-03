@@ -1,10 +1,15 @@
 package com.example.final_project.facade;
 
+import aj.org.objectweb.asm.commons.Remapper;
 import com.example.final_project.component.Utils;
+import com.example.final_project.model.entity.AlbumEntity;
 import com.example.final_project.model.entity.MusicEntity;
 import com.example.final_project.model.entity.UserEntity;
+import com.example.final_project.model.enums.MusicGenre;
 import com.example.final_project.model.request.MusicRequest;
 import com.example.final_project.model.response.MusicResponse;
+import com.example.final_project.model.response.PagedResponse;
+import com.example.final_project.model.response.UserResponse;
 import com.example.final_project.repository.MusicRepository;
 import com.example.final_project.service.AlbumService;
 import com.example.final_project.service.MusicService;
@@ -24,26 +29,27 @@ public class MusicFacade {
 
     public MusicResponse addMusicEntity(MusicRequest musicRequest) {
         UserEntity currentUser = userService.findUserById(Utils.getPrincipalDatabaseId());
-        if (musicRequest.getAlbum_id() != null)
-            return MusicResponse.toMusicResponse(musicService.save(MusicEntity.toMusicEntity(musicRequest, currentUser, albumService.findAlbumById(musicRequest.getAlbum_id()))));
-        else
-            return MusicResponse.toMusicResponse(musicService.save(MusicEntity.toMusicEntity(musicRequest, currentUser)));
+        AlbumEntity albumById = musicRequest.getAlbumId() != null ? albumService.findAlbumById(musicRequest.getAlbumId()) : null;
+        return MusicResponse.toMusicResponse(musicService.save(MusicEntity.toMusicEntity(musicRequest, currentUser, albumById)));
     }
 
-    public Page<MusicResponse> findAllMusicByName(String musicName, Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
-        return musicService.findAllMusicByName(musicName, pageNumber, pageSize, direction, sortBy).map(MusicResponse::toMusicResponse);
-    }
-
-    public Page<MusicResponse> findAllMusic(Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
-        return musicService.findAllMusic(pageNumber, pageSize, direction, sortBy).map(MusicResponse::toMusicResponse);
+    public Page<MusicResponse> getMusicEntities(String musicName, MusicGenre musicGenre, String authorName, String albumName,
+                                                Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
+        return musicService.getMusicEntities(
+                musicName, musicGenre, authorName, albumName,
+                pageNumber, pageSize, direction, sortBy).map(MusicResponse::toMusicResponse);
     }
 
     public MusicResponse findMusicById(Long musicId) {
         return MusicResponse.toMusicResponse(musicService.findMusicById(musicId));
     }
 
+    @Transactional
     public MusicResponse updateMusicById(Long musicId, MusicRequest musicRequest) {
-        return null;
+        UserEntity newAuthor = musicRequest.getAuthorId() != null ? userService.findUserById(musicRequest.getAuthorId()) : null;
+        AlbumEntity albumEntity = musicRequest.getAlbumId() != null ? albumService.findAlbumById(musicRequest.getAlbumId()) : null;
+        MusicEntity musicEntity = MusicEntity.toMusicEntity(musicRequest, newAuthor, albumEntity);
+        return MusicResponse.toMusicResponse(musicService.updateMusicById(musicId, musicEntity));
     }
 
     public void deleteMusicById(Long musicId) {

@@ -5,6 +5,7 @@ import com.example.final_project.exception.CustomException;
 import com.example.final_project.model.entity.UserEntity;
 import com.example.final_project.model.enums.UserRole;
 import com.example.final_project.model.enums.UserStatus;
+import com.example.final_project.model.response.UserResponse;
 import com.example.final_project.security.CustomAuthentication;
 import com.example.final_project.service.MailSenderService;
 import com.example.final_project.service.UserService;
@@ -42,7 +43,6 @@ public class AuthFacade {
                 .email("demo.project006@gmail.com")
                 .userRole(UserRole.ADMIN)
                 .userStatus(UserStatus.ACTIVE)
-                .created(LocalDateTime.now())
                 .build());
     }
 
@@ -57,7 +57,7 @@ public class AuthFacade {
 
         return Jwts.builder()
                 .claim("username", userEntity.getUsername())
-                .claim("id", userEntity.getUserId())
+                .claim("id", userEntity.getId())
                 .claim("role", userEntity.getUserRole().toString())
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(Instant.now().plus(30, ChronoUnit.MINUTES)))
@@ -78,15 +78,14 @@ public class AuthFacade {
         return new CustomAuthentication(id, role, username);
     }
 
-    public UserEntity signUp(UserEntity userEntity) {
+    public UserResponse signUp(UserEntity userEntity) {
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userEntity.setUserStatus(UserStatus.PENDING);
-        userEntity.setCreated(LocalDateTime.now());
         userEntity.setVerificationCode(Utils.generateVerificationCode());
         userEntity.setVerificationCodeExpDate(LocalDateTime.now().plusMinutes(30));
 
         sendVerificationCode(userEntity);
-        return userService.save(userEntity);
+        return UserResponse.toUserResponse(userService.save(userEntity));
     }
 
     public String verifyUser(String userEmail, String verificationCode) {
