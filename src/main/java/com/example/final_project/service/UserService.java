@@ -2,6 +2,9 @@ package com.example.final_project.service;
 
 import com.example.final_project.exception.CustomException;
 import com.example.final_project.model.entity.UserEntity;
+import com.example.final_project.model.enums.UserRole;
+import com.example.final_project.model.enums.UserStatus;
+import com.example.final_project.model.specification.UserSpecification;
 import com.example.final_project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,8 +41,11 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "User with email %s was not found".formatted(email)));
     }
 
-    public Page<UserEntity> findAllUsers(Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
-        return userRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
+    public Page<UserEntity> getUsers(String username, String email, UserRole userRole, UserStatus userStatus,
+                                     Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
+        return userRepository.findAll(
+                UserSpecification.searchUsers(username, email, userRole, userStatus),
+                PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
     }
 
     @Transactional
@@ -49,7 +55,6 @@ public class UserService {
             if (updatedUser.getEmail() != null) existingUser.setEmail(updatedUser.getEmail());
             if (updatedUser.getUserRole() != null) existingUser.setUserRole(updatedUser.getUserRole());
             if (updatedUser.getUserStatus() != null) existingUser.setUserStatus(updatedUser.getUserStatus());
-            existingUser.setModified(LocalDateTime.now());
             return existingUser;
         }).orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "User with id %d was not found".formatted(userId)));
     }

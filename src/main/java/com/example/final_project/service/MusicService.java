@@ -2,6 +2,8 @@ package com.example.final_project.service;
 
 import com.example.final_project.exception.CustomException;
 import com.example.final_project.model.entity.MusicEntity;
+import com.example.final_project.model.enums.MusicGenre;
+import com.example.final_project.model.specification.MusicSpecification;
 import com.example.final_project.repository.MusicRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,12 +22,11 @@ public class MusicService {
         return musicRepository.save(musicEntity);
     }
 
-    public Page<MusicEntity> findAllMusicByName(String musicName, Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
-        return musicRepository.findMusicEntitiesByMusicNameContaining(musicName, PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
-    }
-
-    public Page<MusicEntity> findAllMusic(Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
-        return musicRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
+    public Page<MusicEntity> getMusicEntities(String musicName, MusicGenre musicGenre, String authorName, String albumName,
+                                              Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
+        return musicRepository.findAll(
+                MusicSpecification.searchMusicEntities(musicName, musicGenre, authorName, albumName),
+                PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
     }
 
     public MusicEntity findMusicById(Long musicId) {
