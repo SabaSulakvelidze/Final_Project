@@ -38,7 +38,7 @@ public class MusicService {
     public MusicEntity updateMusicById(Long musicId, MusicEntity updatedMusic) {
         return musicRepository.findById(musicId).map(existingMusic -> {
             if (updatedMusic.getMusicName() != null) existingMusic.setMusicName(updatedMusic.getMusicName());
-            if (updatedMusic.getGenre() != null) existingMusic.setGenre(updatedMusic.getGenre());
+            if (updatedMusic.getMusicGenre() != null) existingMusic.setMusicGenre(updatedMusic.getMusicGenre());
             if (updatedMusic.getAuthor() != null) existingMusic.setAuthor(updatedMusic.getAuthor());
             if (updatedMusic.getAlbum() != null) existingMusic.setAlbum(updatedMusic.getAlbum());
             return existingMusic;

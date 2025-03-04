@@ -26,7 +26,7 @@ public class MusicEntity {
 
     @Column(name = "genre", nullable = false)
     @Enumerated(EnumType.STRING)
-    private MusicGenre genre;
+    private MusicGenre musicGenre;
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
@@ -42,7 +42,7 @@ public class MusicEntity {
     public static MusicEntity toMusicEntity(MusicRequest musicRequest, UserEntity author, AlbumEntity album) {
         return MusicEntity.builder()
                 .musicName(musicRequest.getMusicName())
-                .genre(musicRequest.getGenre())
+                .musicGenre(musicRequest.getMusicGenre())
                 .author(author)
                 .album(album)
                 .build();

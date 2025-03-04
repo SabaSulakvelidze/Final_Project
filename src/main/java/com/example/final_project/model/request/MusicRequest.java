@@ -21,7 +21,7 @@ public class MusicRequest {
 
     @NotNull(message = "genre can not be null")
     @Enumerated(EnumType.STRING)
-    private MusicGenre genre;
+    private MusicGenre musicGenre;
 
     @Positive(message = "id must be positive")
     private Long authorId;

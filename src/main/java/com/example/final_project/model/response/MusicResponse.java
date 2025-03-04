@@ -16,20 +16,22 @@ import java.util.stream.Collectors;
 public class MusicResponse {
     private Long musicId;
     private String musicName;
-    private MusicGenre genre;
+    private MusicGenre musicGenre;
     private String authorName;
     private String albumName;
     private HashMap<Long, String> playlists = new HashMap<>();
 
     public static MusicResponse toMusicResponse(MusicEntity musicEntity) {
-        HashMap<Long, String> plMap = musicEntity.getPlaylists().stream()
-                .collect(Collectors.toMap(PlaylistEntity::getId, PlaylistEntity::getPlaylistName, (existing, replacement) -> existing, HashMap::new));
+        HashMap<Long, String> plMap = musicEntity.getPlaylists() != null ? musicEntity.getPlaylists().stream()
+                .collect(Collectors.toMap(PlaylistEntity::getId, PlaylistEntity::getPlaylistName,
+                        (existing, replacement) -> existing, HashMap::new)) : null;
+        String albumName = musicEntity.getAlbum() != null ? musicEntity.getAlbum().getAlbumName() : null;
         return MusicResponse.builder()
                 .musicId(musicEntity.getId())
                 .musicName(musicEntity.getMusicName())
-                .genre(musicEntity.getGenre())
+                .musicGenre(musicEntity.getMusicGenre())
                 .authorName(musicEntity.getAuthor().getUsername())
-                .albumName(musicEntity.getAlbum().getAlbumName())
+                .albumName(albumName)
                 .playlists(plMap)
                 .build();
 
