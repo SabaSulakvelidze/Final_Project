@@ -1,13 +1,11 @@
 package com.example.final_project.controller;
 
 import com.example.final_project.facade.UserFacade;
-import com.example.final_project.model.entity.UserEntity;
 import com.example.final_project.model.enums.UserRole;
 import com.example.final_project.model.enums.UserStatus;
 import com.example.final_project.model.request.UserRequest;
 import com.example.final_project.model.response.PagedResponse;
 import com.example.final_project.model.response.UserResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -22,15 +20,14 @@ public class UserController {
 
     private final UserFacade userFacade;
 
-
     @GetMapping("/getUser/{userId}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ARTIST','LISTENER')")
     public ResponseEntity<UserResponse> getUser(@PathVariable("userId") Long userId) {
         return new ResponseEntity<>(userFacade.findUserById(userId), HttpStatus.OK);
     }
 
     @GetMapping("/getUsers")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ARTIST','LISTENER')")
     public ResponseEntity<PagedResponse<UserResponse>> getUsers(
             @RequestParam(required = false) String username,
             @RequestParam(required = false) String email,
@@ -49,7 +46,7 @@ public class UserController {
     @PutMapping("/update/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public UserResponse updateUser(@PathVariable("userId") Long userId,
-                                   @RequestBody @Valid UserRequest userRequest) {
+                                   @RequestBody UserRequest userRequest) {
         return userFacade.updateUserById(userId, userRequest);
     }
 

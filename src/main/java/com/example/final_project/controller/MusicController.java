@@ -5,6 +5,7 @@ import com.example.final_project.model.enums.MusicGenre;
 import com.example.final_project.model.request.MusicRequest;
 import com.example.final_project.model.response.MusicResponse;
 import com.example.final_project.model.response.PagedResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -19,14 +20,20 @@ public class MusicController {
 
     private final MusicFacade musicFacade;
 
+    @PostMapping("/addMusic")
+    @PreAuthorize("hasAnyRole('ADMIN','ARTIST')")
+    public ResponseEntity<MusicResponse> addMusic(@RequestBody @Valid MusicRequest musicRequest) {
+        return new ResponseEntity<>(musicFacade.addMusicEntity(musicRequest), HttpStatus.CREATED);
+    }
+
     @GetMapping("/getMusic/{musicId}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<MusicResponse> getUser(@PathVariable("musicId") Long musicId) {
+    @PreAuthorize("hasAnyRole('ADMIN','ARTIST','LISTENER')")
+    public ResponseEntity<MusicResponse> getMusic(@PathVariable("musicId") Long musicId) {
         return new ResponseEntity<>(musicFacade.findMusicById(musicId), HttpStatus.OK);
     }
 
     @GetMapping("/getMusicEntities")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ARTIST','LISTENER')")
     public ResponseEntity<PagedResponse<MusicResponse>> getMusicEntities(
             @RequestParam(required = false) String musicName,
             @RequestParam(required = false) MusicGenre musicGenre,
@@ -43,14 +50,14 @@ public class MusicController {
     }
 
     @PutMapping("/update/{musicId}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ARTIST')")
     public MusicResponse updateMusicEntity(@PathVariable("musicId") Long musicId,
                                            @RequestBody MusicRequest musicRequest) {
         return musicFacade.updateMusicById(musicId, musicRequest);
     }
 
     @DeleteMapping("/delete/{musicId}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','ARTIST')")
     public ResponseEntity<Void> deleteMusic(@PathVariable("musicId") Long musicId) {
         musicFacade.deleteMusicById(musicId);
         return ResponseEntity.ok().build();

@@ -23,7 +23,7 @@ public class AuthController {
 
     @PostMapping("/signUp")
     public ResponseEntity<UserResponse> signUpUser(@RequestBody @Valid UserRequest userRequest) {
-        if (userRequest.getRole().equals(UserRole.ADMIN)) throw new CustomException(HttpStatus.FORBIDDEN, "Admin has to be added manually");
+        if (userRequest.getUserRole().equals(UserRole.ADMIN)) throw new CustomException(HttpStatus.FORBIDDEN, "Admin has to be added manually");
         return new ResponseEntity<>(authFacade.signUp(UserEntity.toUserEntity(userRequest)), HttpStatus.CREATED);
     }
 
