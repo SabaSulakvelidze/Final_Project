@@ -2,6 +2,10 @@ package com.example.final_project.service;
 
 import com.example.final_project.exception.CustomException;
 import com.example.final_project.model.entity.AlbumEntity;
+import com.example.final_project.model.entity.MusicEntity;
+import com.example.final_project.model.enums.MusicGenre;
+import com.example.final_project.model.specification.AlbumSpecification;
+import com.example.final_project.model.specification.MusicSpecification;
 import com.example.final_project.repository.AlbumRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,17 +24,15 @@ public class AlbumService {
         return albumRepository.save(albumEntity);
     }
 
-    public Page<AlbumEntity> findAllAlbumsByName(String albumName, Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
-        return albumRepository.findAlbumEntitiesByAlbumNameContaining(albumName, PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
-    }
-
-    public Page<AlbumEntity> findAllAlbums(Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
-        return albumRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
-    }
-
     public AlbumEntity findAlbumById(Long albumId) {
         return albumRepository.findById(albumId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "album with id %d was not found".formatted(albumId)));
+    }
+
+    public Page<AlbumEntity> getAlbums(String albumName, Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
+        return albumRepository.findAll(
+                AlbumSpecification.searchAlbums(albumName),
+                PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
     }
 
     @Transactional

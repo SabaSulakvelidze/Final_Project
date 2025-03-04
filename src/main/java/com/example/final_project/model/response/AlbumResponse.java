@@ -15,11 +15,12 @@ import java.util.stream.Collectors;
 public class AlbumResponse {
     private Long albumId;
     private String title;
-    private HashMap<Long,String> musicList = new HashMap<>();
+    private HashMap<Long, String> musicList = new HashMap<>();
 
     public static AlbumResponse toAlbumResponse(AlbumEntity albumEntity) {
-        HashMap<Long, String> musicMap = albumEntity.getMusicList().stream()
-                .collect(Collectors.toMap(MusicEntity::getId, MusicEntity::getMusicName, (existing, replacement) -> existing, HashMap::new));
+        HashMap<Long, String> musicMap = albumEntity.getMusicList() != null ? albumEntity.getMusicList().stream()
+                .collect(Collectors.toMap(MusicEntity::getId, MusicEntity::getMusicName,
+                        (existing, replacement) -> existing, HashMap::new)) : null;
         return AlbumResponse.builder()
                 .albumId(albumEntity.getId())
                 .title(albumEntity.getAlbumName())

@@ -4,9 +4,9 @@ import com.example.final_project.model.entity.AlbumEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AlbumRepository extends JpaRepository<AlbumEntity, Long> {
-    Page<AlbumEntity> findAlbumEntitiesByAlbumNameContaining(String albumName, Pageable pageable);
+public interface AlbumRepository extends JpaRepository<AlbumEntity, Long>, JpaSpecificationExecutor<AlbumEntity> {
 }

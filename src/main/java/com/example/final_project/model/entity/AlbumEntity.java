@@ -1,5 +1,6 @@
 package com.example.final_project.model.entity;
 
+import com.example.final_project.model.request.AlbumRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,4 +25,10 @@ public class AlbumEntity {
 
     @OneToMany(mappedBy = "album")
     private List<MusicEntity> musicList = new ArrayList<>();
+
+    public static AlbumEntity toAlbumEntity(AlbumRequest albumRequest) {
+        return AlbumEntity.builder()
+                .albumName(albumRequest.getTitle())
+                .build();
+    }
 }
