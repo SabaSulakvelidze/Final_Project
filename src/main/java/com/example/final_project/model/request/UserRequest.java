@@ -29,5 +29,9 @@ public class UserRequest {
 
     @NotNull(message = "role can not be null")
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRole userRole;
+
+    @NotNull(message = "userStatus can not be null")
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
 }
