@@ -2,13 +2,10 @@ package com.example.final_project.service;
 
 import com.example.final_project.exception.CustomException;
 import com.example.final_project.model.entity.MusicEntity;
-import com.example.final_project.model.enums.MusicGenre;
-import com.example.final_project.model.specification.MusicSpecification;
 import com.example.final_project.repository.MusicRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
