@@ -1,32 +1,28 @@
 package com.example.final_project.model.response;
 
 import com.example.final_project.model.entity.UserEntity;
-import com.example.final_project.model.enums.UserRole;
-import com.example.final_project.model.enums.UserStatus;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.util.HashMap;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class UserResponse {
-    private Long id;
-    private String username;
-    private String email;
-    private UserRole role;
-    private UserStatus status;
+@ToString(callSuper = true)
+public class ArtistResponse extends UserResponse {
+    private HashMap<Long, String> similarArtists = new HashMap<>();
 
-    public static UserResponse toUserResponse(UserEntity userEntity){
-        return UserResponse.builder()
+    public static ArtistResponse toArtistResponse(UserEntity userEntity, HashMap<Long, String> similarArtists) {
+        return ArtistResponse.builder()
                 .id(userEntity.getId())
                 .username(userEntity.getUsername())
                 .email(userEntity.getEmail())
                 .role(userEntity.getUserRole())
                 .status(userEntity.getUserStatus())
+                .similarArtists(similarArtists)
                 .build();
     }
 }
