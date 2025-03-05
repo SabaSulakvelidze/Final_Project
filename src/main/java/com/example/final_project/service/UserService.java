@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -38,6 +40,10 @@ public class UserService {
 
     public Page<UserEntity> getUsers(Specification<UserEntity> specification, PageRequest pageRequest) {
         return userRepository.findAll(specification,pageRequest);
+    }
+
+    public List<UserEntity> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Transactional
