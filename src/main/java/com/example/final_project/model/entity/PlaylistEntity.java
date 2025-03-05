@@ -14,7 +14,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "playlists", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"playlistName", "owner_id"})
+        @UniqueConstraint(columnNames = {"playlist_name", "owner_id"})
 })
 public class PlaylistEntity {
     @Id
@@ -22,6 +22,7 @@ public class PlaylistEntity {
     @Column(name = "playlist_id")
     private Long id;
 
+    @Column(name = "playlist_name")
     private String playlistName;
 
     private String playlistDescription;

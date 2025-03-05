@@ -15,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -26,7 +25,7 @@ public class PlaylistFacade {
     private final MusicService musicService;
 
     public PlaylistResponse addPlaylist(PlaylistRequest playlistRequest) {
-        UserEntity currentUser = userService.findUserById(Utils.getPrincipalDatabaseId());
+        UserEntity currentUser = userService.findUserById(Utils.getCurrentUserId());
         PlaylistEntity playlistEntity = playlistService.save(PlaylistEntity.toPlayListEntity(playlistRequest, currentUser));
         if (playlistRequest.getMusicIdList() != null && !playlistRequest.getMusicIdList().isEmpty())
             playlistRequest.getMusicIdList().forEach(musicId -> playlistEntity.getMusicList().add(musicService.findMusicById(musicId)));

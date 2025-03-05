@@ -24,7 +24,7 @@ public class UserController {
     @GetMapping("/getCurrentUser")
     @PreAuthorize("hasAnyRole('ADMIN','ARTIST','LISTENER')")
     public ResponseEntity<UserResponse> getCurrentUser() {
-        return new ResponseEntity<>(userFacade.findUserById(Utils.getPrincipalDatabaseId()), HttpStatus.OK);
+        return new ResponseEntity<>(userFacade.findUserById(Utils.getCurrentUserId()), HttpStatus.OK);
     }
 
     @GetMapping("/getUser/{userId}")

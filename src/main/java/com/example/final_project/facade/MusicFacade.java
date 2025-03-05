@@ -24,7 +24,7 @@ public class MusicFacade {
     private final AlbumService albumService;
 
     public MusicResponse addMusicEntity(MusicRequest musicRequest) {
-        UserEntity currentUser = userService.findUserById(Utils.getPrincipalDatabaseId());
+        UserEntity currentUser = userService.findUserById(Utils.getCurrentUserId());
         AlbumEntity albumById = musicRequest.getAlbumId() != null ? albumService.findAlbumById(musicRequest.getAlbumId()) : null;
         return MusicResponse.toMusicResponse(musicService.save(MusicEntity.toMusicEntity(musicRequest, currentUser, albumById)));
     }

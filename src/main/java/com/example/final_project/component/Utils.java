@@ -38,7 +38,7 @@ public class Utils {
                 throw new CustomException(HttpStatus.FORBIDDEN, "User %s doesn't have permission for this action".formatted(currentUser));
     }
 
-    public static Long getPrincipalDatabaseId() {
+    public static Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (Long) authentication.getPrincipal();
     }

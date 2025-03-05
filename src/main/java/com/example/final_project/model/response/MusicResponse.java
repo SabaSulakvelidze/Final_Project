@@ -1,12 +1,8 @@
 package com.example.final_project.model.response;
 
 import com.example.final_project.model.entity.MusicEntity;
-import com.example.final_project.model.entity.PlaylistEntity;
 import com.example.final_project.model.enums.MusicGenre;
 import lombok.*;
-
-import java.util.HashMap;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter

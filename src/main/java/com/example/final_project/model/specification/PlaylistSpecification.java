@@ -1,8 +1,6 @@
 package com.example.final_project.model.specification;
 
-import com.example.final_project.model.entity.MusicEntity;
 import com.example.final_project.model.entity.PlaylistEntity;
-import com.example.final_project.model.enums.MusicGenre;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;

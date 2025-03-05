@@ -27,7 +27,7 @@ public class AlbumFacade {
 
     @Transactional
     public AlbumResponse addAlbum(AlbumRequest albumRequest) {
-        UserEntity currentUser = userService.findUserById(Utils.getPrincipalDatabaseId());
+        UserEntity currentUser = userService.findUserById(Utils.getCurrentUserId());
         AlbumEntity albumEntity = albumService.save(AlbumEntity.toAlbumEntity(albumRequest, currentUser));
         addMusicToAlbum(albumRequest, albumEntity);
         return AlbumResponse.toAlbumResponse(albumEntity);
