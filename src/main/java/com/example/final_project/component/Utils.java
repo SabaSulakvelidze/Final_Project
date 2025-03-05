@@ -29,13 +29,13 @@ public class Utils {
         return new BCryptPasswordEncoder();
     }
 
-    public static void checkIfUserIsOwner(String username) {
+    public static void checkIfCurrentUserIsOwner(String realOwner) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
+        String currentUser = authentication.getName();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         if (!authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN")))
-            if (!Objects.equals(username, userName))
-                throw new CustomException(HttpStatus.FORBIDDEN, "User %s doesn't have permission for this action".formatted(userName));
+            if (!Objects.equals(realOwner, currentUser))
+                throw new CustomException(HttpStatus.FORBIDDEN, "User %s doesn't have permission for this action".formatted(currentUser));
     }
 
     public static Long getPrincipalDatabaseId() {

@@ -1,5 +1,6 @@
 package com.example.final_project.controller;
 
+import com.example.final_project.component.Utils;
 import com.example.final_project.facade.UserFacade;
 import com.example.final_project.model.enums.UserRole;
 import com.example.final_project.model.enums.UserStatus;
@@ -19,6 +20,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserFacade userFacade;
+
+    @GetMapping("/getCurrentUser")
+    @PreAuthorize("hasAnyRole('ADMIN','ARTIST','LISTENER')")
+    public ResponseEntity<UserResponse> getCurrentUser() {
+        return new ResponseEntity<>(userFacade.findUserById(Utils.getPrincipalDatabaseId()), HttpStatus.OK);
+    }
 
     @GetMapping("/getUser/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN','ARTIST','LISTENER')")

@@ -1,6 +1,5 @@
 package com.example.final_project.facade;
 
-import aj.org.objectweb.asm.commons.Remapper;
 import com.example.final_project.component.Utils;
 import com.example.final_project.model.entity.AlbumEntity;
 import com.example.final_project.model.entity.MusicEntity;
@@ -8,9 +7,6 @@ import com.example.final_project.model.entity.UserEntity;
 import com.example.final_project.model.enums.MusicGenre;
 import com.example.final_project.model.request.MusicRequest;
 import com.example.final_project.model.response.MusicResponse;
-import com.example.final_project.model.response.PagedResponse;
-import com.example.final_project.model.response.UserResponse;
-import com.example.final_project.repository.MusicRepository;
 import com.example.final_project.service.AlbumService;
 import com.example.final_project.service.MusicService;
 import com.example.final_project.service.UserService;
@@ -46,6 +42,7 @@ public class MusicFacade {
 
     @Transactional
     public MusicResponse updateMusicById(Long musicId, MusicRequest musicRequest) {
+        Utils.checkIfCurrentUserIsOwner(musicService.findMusicById(musicId).getAuthor().getUsername());
         UserEntity newAuthor = musicRequest.getAuthorId() != null ? userService.findUserById(musicRequest.getAuthorId()) : null;
         AlbumEntity albumEntity = musicRequest.getAlbumId() != null ? albumService.findAlbumById(musicRequest.getAlbumId()) : null;
         MusicEntity musicEntity = MusicEntity.toMusicEntity(musicRequest, newAuthor, albumEntity);
@@ -53,6 +50,7 @@ public class MusicFacade {
     }
 
     public void deleteMusicById(Long musicId) {
+        Utils.checkIfCurrentUserIsOwner(musicService.findMusicById(musicId).getAuthor().getUsername());
         musicService.deleteMusicById(musicId);
     }
 }
