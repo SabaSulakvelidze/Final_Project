@@ -3,10 +3,7 @@ package com.example.final_project.model.response;
 import com.example.final_project.model.entity.UserEntity;
 import com.example.final_project.model.enums.UserRole;
 import com.example.final_project.model.enums.UserStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Getter
@@ -14,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
+@ToString
 public class UserResponse {
     private Long id;
     private String username;

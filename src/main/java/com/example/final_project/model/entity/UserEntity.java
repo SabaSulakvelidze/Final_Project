@@ -3,6 +3,7 @@ package com.example.final_project.model.entity;
 import com.example.final_project.model.enums.UserRole;
 import com.example.final_project.model.enums.UserStatus;
 import com.example.final_project.model.request.UserRequest;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -57,6 +58,10 @@ public class UserEntity {
     @OneToMany(mappedBy = "owner")
     @Builder.Default
     private Set<PlaylistEntity> playlists = new HashSet<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<StatisticsEntity> stats;
 
     public static UserEntity toUserEntity(UserRequest userRequest) {
         return UserEntity.builder()

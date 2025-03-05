@@ -2,11 +2,13 @@ package com.example.final_project.model.entity;
 
 import com.example.final_project.model.enums.MusicGenre;
 import com.example.final_project.model.request.MusicRequest;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,6 +41,10 @@ public class MusicEntity {
     @ManyToMany(mappedBy = "musicList")
     @Builder.Default
     private List<PlaylistEntity> playlists = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "music", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<StatisticsEntity> stats;
 
     public static MusicEntity toMusicEntity(MusicRequest musicRequest, UserEntity author, AlbumEntity album) {
         return MusicEntity.builder()
