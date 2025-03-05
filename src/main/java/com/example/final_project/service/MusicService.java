@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +23,8 @@ public class MusicService {
         return musicRepository.save(musicEntity);
     }
 
-    public Page<MusicEntity> getMusicEntities(String musicName, MusicGenre musicGenre, String authorName, String albumName,
-                                              Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
-        return musicRepository.findAll(
-                MusicSpecification.searchMusicEntities(musicName, musicGenre, authorName, albumName),
-                PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
+    public Page<MusicEntity> getMusicEntities(Specification<MusicEntity> specification, PageRequest pageRequest) {
+        return musicRepository.findAll(specification,pageRequest);
     }
 
     public MusicEntity findMusicById(Long musicId) {

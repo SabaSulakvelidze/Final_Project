@@ -2,19 +2,14 @@ package com.example.final_project.service;
 
 import com.example.final_project.exception.CustomException;
 import com.example.final_project.model.entity.UserEntity;
-import com.example.final_project.model.enums.UserRole;
-import com.example.final_project.model.enums.UserStatus;
-import com.example.final_project.model.specification.UserSpecification;
 import com.example.final_project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -41,11 +36,8 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "User with email %s was not found".formatted(email)));
     }
 
-    public Page<UserEntity> getUsers(String username, String email, UserRole userRole, UserStatus userStatus,
-                                     Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
-        return userRepository.findAll(
-                UserSpecification.searchUsers(username, email, userRole, userStatus),
-                PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
+    public Page<UserEntity> getUsers(Specification<UserEntity> specification, PageRequest pageRequest) {
+        return userRepository.findAll(specification,pageRequest);
     }
 
     @Transactional

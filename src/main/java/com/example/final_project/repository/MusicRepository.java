@@ -9,7 +9,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MusicRepository extends JpaRepository<MusicEntity, Long>, JpaSpecificationExecutor<MusicEntity> {
-
-    Page<MusicEntity> findMusicEntitiesByMusicNameContaining(String musicName, Pageable pageable);
-
 }
