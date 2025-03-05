@@ -7,11 +7,13 @@ import com.example.final_project.model.entity.UserEntity;
 import com.example.final_project.model.enums.MusicGenre;
 import com.example.final_project.model.request.MusicRequest;
 import com.example.final_project.model.response.MusicResponse;
+import com.example.final_project.model.specification.MusicSpecification;
 import com.example.final_project.service.AlbumService;
 import com.example.final_project.service.MusicService;
 import com.example.final_project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +34,9 @@ public class MusicFacade {
     public Page<MusicResponse> getMusicEntities(String musicName, MusicGenre musicGenre, String authorName, String albumName,
                                                 Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
         return musicService.getMusicEntities(
-                musicName, musicGenre, authorName, albumName,
-                pageNumber, pageSize, direction, sortBy).map(MusicResponse::toMusicResponse);
+                        MusicSpecification.searchMusicEntities(musicName, musicGenre, authorName, albumName),
+                        PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy))).
+                map(MusicResponse::toMusicResponse);
     }
 
     public MusicResponse findMusicById(Long musicId) {

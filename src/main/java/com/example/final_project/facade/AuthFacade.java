@@ -37,13 +37,14 @@ public class AuthFacade {
 
     @PostConstruct
     public void initAdminUser() {
-        userService.save(UserEntity.builder()
+        UserEntity admin = UserEntity.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("123456"))
                 .email("demo.project006@gmail.com")
                 .userRole(UserRole.ADMIN)
                 .userStatus(UserStatus.ACTIVE)
-                .build());
+                .build();
+        if (userService.findFirstByUsernameEquals(admin.getUsername()) == null) userService.save(admin);
     }
 
     public String signIn(String username, String password) {

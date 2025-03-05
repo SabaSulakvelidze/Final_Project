@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,17 +30,16 @@ public class AlbumService {
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "album with id %d was not found".formatted(albumId)));
     }
 
-    public Page<AlbumEntity> getAlbums(String albumName, Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
-        return albumRepository.findAll(
-                AlbumSpecification.searchAlbums(albumName),
-                PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
+    public Page<AlbumEntity> getAlbums(Specification<AlbumEntity> specification, PageRequest pageRequest) {
+        return albumRepository.findAll(specification, pageRequest);
     }
 
     @Transactional
     public AlbumEntity updateAlbumById(Long albumId, AlbumEntity albumEntity) {
         return albumRepository.findById(albumId).map(existingAlbum -> {
             if (albumEntity.getAlbumName() != null) existingAlbum.setAlbumName(albumEntity.getAlbumName());
-            if (albumEntity.getMusicList() != null && !albumEntity.getMusicList().isEmpty()) existingAlbum.setMusicList(albumEntity.getMusicList());
+            if (albumEntity.getMusicList() != null && !albumEntity.getMusicList().isEmpty())
+                existingAlbum.setMusicList(albumEntity.getMusicList());
             return existingAlbum;
         }).orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "album with id %d was not found".formatted(albumId)));
     }

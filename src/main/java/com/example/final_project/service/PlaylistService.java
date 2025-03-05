@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,11 +22,8 @@ public class PlaylistService {
         return playlistRepository.save(playlistEntity);
     }
 
-    public Page<PlaylistEntity> getPlaylists(String playlistName, String ownerName,
-                                             Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
-        return playlistRepository.findAll(
-                PlaylistSpecification.searchPlaylists(playlistName, ownerName),
-                PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)));
+    public Page<PlaylistEntity> getPlaylists(Specification<PlaylistEntity> specification , PageRequest pageRequest) {
+        return playlistRepository.findAll(specification, pageRequest);
     }
 
     public PlaylistEntity findPlaylistById(Long playlistId) {

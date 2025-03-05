@@ -7,12 +7,15 @@ import com.example.final_project.model.entity.MusicEntity;
 import com.example.final_project.model.entity.UserEntity;
 import com.example.final_project.model.request.AlbumRequest;
 import com.example.final_project.model.response.AlbumResponse;
+import com.example.final_project.model.specification.AlbumSpecification;
 import com.example.final_project.service.AlbumService;
 import com.example.final_project.service.MusicService;
 import com.example.final_project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +41,12 @@ public class AlbumFacade {
     }
 
     public Page<AlbumResponse> getAlbums(String albumName, Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
-        return albumService.getAlbums(albumName, pageNumber, pageSize, direction, sortBy).map(AlbumResponse::toAlbumResponse);
+        return albumService.getAlbums(
+                        AlbumSpecification.searchAlbums(albumName),
+                        PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)))
+                .map(AlbumResponse::toAlbumResponse);
     }
+
 
     @Transactional
     public AlbumResponse updateAlbumById(Long albumId, AlbumRequest albumRequest) {
@@ -59,7 +66,8 @@ public class AlbumFacade {
         if (albumRequest.getMusicIdList() != null && !albumRequest.getMusicIdList().isEmpty())
             albumRequest.getMusicIdList().forEach(musicId -> {
                 MusicEntity musicById = musicService.findMusicById(musicId);
-                if (musicById.getAlbum() != null) throw new CustomException(HttpStatus.BAD_REQUEST,"music with id %d exist in album with id %d".formatted(musicById.getId(),musicById.getAlbum().getId()));
+                if (musicById.getAlbum() != null)
+                    throw new CustomException(HttpStatus.BAD_REQUEST, "music with id %d exist in album with id %d".formatted(musicById.getId(), musicById.getAlbum().getId()));
                 musicById.setAlbum(albumEntity);
                 musicService.save(musicById);
             });

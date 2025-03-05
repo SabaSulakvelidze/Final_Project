@@ -6,11 +6,13 @@ import com.example.final_project.model.entity.PlaylistEntity;
 import com.example.final_project.model.entity.UserEntity;
 import com.example.final_project.model.request.PlaylistRequest;
 import com.example.final_project.model.response.PlaylistResponse;
+import com.example.final_project.model.specification.PlaylistSpecification;
 import com.example.final_project.service.MusicService;
 import com.example.final_project.service.PlaylistService;
 import com.example.final_project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,8 +37,9 @@ public class PlaylistFacade {
     public Page<PlaylistResponse> getPlaylists(String playlistName, String ownerName,
                                                Integer pageNumber, Integer pageSize, Sort.Direction direction, String sortBy) {
         return playlistService.getPlaylists(
-                playlistName, ownerName,
-                pageNumber, pageSize, direction, sortBy).map(PlaylistResponse::toPlaylistResponse);
+                        PlaylistSpecification.searchPlaylists(playlistName, ownerName),
+                        PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy)))
+                .map(PlaylistResponse::toPlaylistResponse);
     }
 
     public PlaylistResponse findPlaylistById(Long playlistId) {
