@@ -1,10 +1,11 @@
 package com.example.final_project.model.entity;
 
+import com.example.final_project.model.request.PlaylistRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,12 +34,13 @@ public class PlaylistEntity {
             joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "music_id")
     )
-    private List<MusicEntity> musicList = new ArrayList<>();
+    @Builder.Default
+    private Set<MusicEntity> musicList = new HashSet<>();
 
-    public static PlaylistEntity toPlayListEntity(PlaylistEntity playlistEntity, UserEntity owner) {
+    public static PlaylistEntity toPlayListEntity(PlaylistRequest playlistRequest, UserEntity owner) {
         return PlaylistEntity.builder()
-                .playlistName(playlistEntity.getPlaylistName())
-                .playlistDescription(playlistEntity.getPlaylistDescription())
+                .playlistName(playlistRequest.getPlaylistName())
+                .playlistDescription(playlistRequest.getPlaylistDescription())
                 .owner(owner)
                 .build();
     }

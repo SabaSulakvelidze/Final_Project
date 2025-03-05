@@ -4,8 +4,8 @@ import com.example.final_project.model.request.AlbumRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,12 +23,18 @@ public class AlbumEntity {
     @Column(name = "album_name", nullable = false, unique = true)
     private String albumName;
 
-    @OneToMany(mappedBy = "album")
-    private List<MusicEntity> musicList = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private UserEntity owner;
 
-    public static AlbumEntity toAlbumEntity(AlbumRequest albumRequest) {
+    @OneToMany(mappedBy = "album")
+    @Builder.Default
+    private Set<MusicEntity> musicList = new HashSet<>();
+
+    public static AlbumEntity toAlbumEntity(AlbumRequest albumRequest,UserEntity owner) {
         return AlbumEntity.builder()
                 .albumName(albumRequest.getTitle())
+                .owner(owner)
                 .build();
     }
 }

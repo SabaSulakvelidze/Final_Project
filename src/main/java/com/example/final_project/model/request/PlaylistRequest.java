@@ -7,7 +7,9 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,5 +24,6 @@ public class PlaylistRequest {
     @Size(min = 20, max = 256, message = "Description must contain between 20-256 characters")
     private String playlistDescription;
 
-    private List<@NotNull @Positive(message = "ID must be positive")Long> musicIdList = new ArrayList<>();
+    @Builder.Default
+    private Set<@NotNull @Positive(message = "ID must be positive")Long> musicIdList = new HashSet<>();
 }

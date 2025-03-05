@@ -37,6 +37,7 @@ public class MusicEntity {
     private AlbumEntity album;
 
     @ManyToMany(mappedBy = "musicList")
+    @Builder.Default
     private List<PlaylistEntity> playlists = new ArrayList<>();
 
     public static MusicEntity toMusicEntity(MusicRequest musicRequest, UserEntity author, AlbumEntity album) {

@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 public class AlbumResponse {
     private Long albumId;
     private String title;
+    private String ownerName;
+    @Builder.Default
     private HashMap<Long, String> musicList = new HashMap<>();
 
     public static AlbumResponse toAlbumResponse(AlbumEntity albumEntity) {
@@ -24,6 +26,7 @@ public class AlbumResponse {
         return AlbumResponse.builder()
                 .albumId(albumEntity.getId())
                 .title(albumEntity.getAlbumName())
+                .ownerName(albumEntity.getOwner().getUsername())
                 .musicList(musicMap)
                 .build();
     }

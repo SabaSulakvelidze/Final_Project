@@ -17,6 +17,7 @@ public class PlaylistResponse {
     private String playlistName;
     private String playlistDescription;
     private String ownerName;
+    @Builder.Default
     private HashMap<Long, String> musicList = new HashMap<>();
 
     public static PlaylistResponse toPlaylistResponse(PlaylistEntity playlistEntity) {
@@ -26,6 +27,7 @@ public class PlaylistResponse {
                 .playlistId(playlistEntity.getId())
                 .playlistName(playlistEntity.getPlaylistName())
                 .playlistDescription(playlistEntity.getPlaylistDescription())
+                .ownerName(playlistEntity.getOwner().getUsername())
                 .musicList(plMap)
                 .build();
 

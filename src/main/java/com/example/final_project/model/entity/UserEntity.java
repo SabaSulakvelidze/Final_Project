@@ -8,7 +8,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -47,10 +49,16 @@ public class UserEntity {
     private LocalDateTime verificationCodeExpDate;
 
     @OneToMany(mappedBy = "author")
-    private List<MusicEntity> musicList = new ArrayList<>();
+    @Builder.Default
+    private Set<MusicEntity> musicList = new HashSet<>();
 
     @OneToMany(mappedBy = "owner")
-    private List<PlaylistEntity> playlists = new ArrayList<>();
+    @Builder.Default
+    private Set<AlbumEntity> albumList = new HashSet<>();
+
+    @OneToMany(mappedBy = "owner")
+    @Builder.Default
+    private Set<PlaylistEntity> playlists = new HashSet<>();
 
     public static UserEntity toUserEntity(UserRequest userRequest) {
         return UserEntity.builder()
