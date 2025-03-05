@@ -1,15 +1,14 @@
 package com.example.final_project.facade;
 
 import com.example.final_project.component.Utils;
-import com.example.final_project.model.entity.AlbumEntity;
-import com.example.final_project.model.entity.MusicEntity;
-import com.example.final_project.model.entity.UserEntity;
+import com.example.final_project.model.entity.*;
 import com.example.final_project.model.enums.MusicGenre;
 import com.example.final_project.model.request.MusicRequest;
 import com.example.final_project.model.response.MusicResponse;
 import com.example.final_project.model.specification.MusicSpecification;
 import com.example.final_project.service.AlbumService;
 import com.example.final_project.service.MusicService;
+import com.example.final_project.service.StatisticsService;
 import com.example.final_project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +23,7 @@ public class MusicFacade {
     private final MusicService musicService;
     private final UserService userService;
     private final AlbumService albumService;
+    private final StatisticsService statisticsService;
 
     public MusicResponse addMusicEntity(MusicRequest musicRequest) {
         UserEntity currentUser = userService.findUserById(Utils.getCurrentUserId());
@@ -40,7 +40,16 @@ public class MusicFacade {
     }
 
     public MusicResponse findMusicById(Long musicId) {
-        return MusicResponse.toMusicResponse(musicService.findMusicById(musicId));
+        MusicEntity musicById = musicService.findMusicById(musicId);
+        UserEntity currentUser = userService.findUserById(Utils.getCurrentUserId());
+
+        StatisticsEntity build = StatisticsEntity.builder()
+                .statisticsId(StatisticsId.builder().userId(currentUser.getId()).musicId(musicById.getId()).build())
+                .user(currentUser)
+                .music(musicById)
+                .build();
+        statisticsService.increasePlayCount(build);
+        return MusicResponse.toMusicResponse(musicById);
     }
 
     @Transactional
