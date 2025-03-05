@@ -13,7 +13,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "playlists")
+@Table(name = "playlists", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"playlistName", "owner_id"})
+})
 public class PlaylistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
