@@ -1,9 +1,12 @@
 package com.example.final_project.facade;
 
 import com.example.final_project.component.Utils;
+import com.example.final_project.exception.CustomException;
+import com.example.final_project.model.entity.AlbumEntity;
 import com.example.final_project.model.entity.MusicEntity;
 import com.example.final_project.model.entity.PlaylistEntity;
 import com.example.final_project.model.entity.UserEntity;
+import com.example.final_project.model.request.AlbumRequest;
 import com.example.final_project.model.request.PlaylistRequest;
 import com.example.final_project.model.response.PlaylistResponse;
 import com.example.final_project.model.specification.PlaylistSpecification;
@@ -14,9 +17,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -26,11 +31,11 @@ public class PlaylistFacade {
     private final UserService userService;
     private final MusicService musicService;
 
+    @Transactional
     public PlaylistResponse addPlaylist(PlaylistRequest playlistRequest) {
         UserEntity currentUser = userService.findUserById(Utils.getCurrentUserId());
         PlaylistEntity playlistEntity = playlistService.save(PlaylistEntity.toPlayListEntity(playlistRequest, currentUser));
-        if (playlistRequest.getMusicIdList() != null && !playlistRequest.getMusicIdList().isEmpty())
-            playlistRequest.getMusicIdList().forEach(musicId -> playlistEntity.getMusicList().add(musicService.findMusicById(musicId)));
+        addMusicToPlaylist(playlistRequest,playlistEntity);
         return PlaylistResponse.toPlaylistResponse(playlistEntity);
     }
 
@@ -77,4 +82,17 @@ public class PlaylistFacade {
     public void deletePlaylistById(Long playlistId) {
         playlistService.deletePlaylistIdById(playlistId);
     }
+
+    public void addMusicToPlaylist(PlaylistRequest playlistRequest, PlaylistEntity playlistEntity) {
+        if (playlistRequest.getMusicIdList() != null && !playlistRequest.getMusicIdList().isEmpty())
+            playlistRequest.getMusicIdList().forEach(musicId -> {
+                MusicEntity musicById = musicService.findMusicById(musicId);
+                if (musicById.getPlaylists().stream().map(PlaylistEntity::getId).toList().contains(playlistEntity.getId()))
+                    throw new CustomException(HttpStatus.BAD_REQUEST, "music with id %d already exists in playList with id %d".formatted(musicById.getId(), playlistEntity.getId()));
+                playlistEntity.getMusicList().add(musicById);
+                playlistService.save(playlistEntity);
+            });
+    }
+
+
 }
