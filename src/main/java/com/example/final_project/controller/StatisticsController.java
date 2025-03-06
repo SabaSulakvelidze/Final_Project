@@ -2,6 +2,7 @@ package com.example.final_project.controller;
 
 import com.example.final_project.facade.StatisticsFacade;
 import com.example.final_project.model.response.statistics.StatisticsResponse;
+import com.example.final_project.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,11 +16,11 @@ import java.util.List;
 @RequestMapping("/stats")
 @RequiredArgsConstructor
 public class StatisticsController {
-    private final StatisticsFacade statisticsFacade;
+    private final StatisticsService statisticsService;
 
     @GetMapping("/getStatistics")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<StatisticsResponse>> getStatistics() {
-        return ResponseEntity.ok().body(statisticsFacade.generatePlayCountReport());
+        return ResponseEntity.ok().body(statisticsService.generatePlayCountReport());
     }
 }

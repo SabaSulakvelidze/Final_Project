@@ -22,12 +22,11 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class StatisticsFacade {
     private final StatisticsService statisticsService;
-    private final UserService userService;
 
     @Scheduled(cron = "0 0 18 * * 5")
     public void runWeeklyReport() {
         System.out.println("=====================");
-        generatePlayCountReport().forEach(System.out::println);
+        statisticsService.generatePlayCountReport().forEach(System.out::println);
         /*generatePlayCountReport().forEach(stats -> {
             try {
                 System.out.println(new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT).writeValueAsString(stats));
@@ -38,24 +37,4 @@ public class StatisticsFacade {
         System.out.println("=====================");
     }
 
-    public List<StatisticsResponse> generatePlayCountReport() {
-        List<StatisticsResponse> result = new ArrayList<>();
-
-        userService.getAllUsers().stream()
-                .filter(user -> user.getUserStatus() == UserStatus.ACTIVE)
-                .forEach(user -> {
-                    Set<PlayCountStat> playCountStats = new HashSet<>();
-                    statisticsService.findStatisticsByUserId(user.getId()).forEach(stat -> {
-                        playCountStats.add(PlayCountStat.builder()
-                                .music(MusicResponse.toMusicResponse(stat.getMusic()))
-                                .playCount(stat.getPlayCount())
-                                .build());
-                    });
-                    result.add(StatisticsResponse.builder()
-                            .user(UserResponse.toUserResponse(user))
-                            .playCountStats(playCountStats)
-                            .build());
-                });
-        return result;
-    }
 }

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -76,5 +77,12 @@ public class PlaylistController {
     public ResponseEntity<Void> deletePlaylist(@PathVariable("playlistId") Long playlistId) {
         playlistFacade.deletePlaylistById(playlistId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/getSuggestedPlaylists")
+    @PreAuthorize("hasAnyRole('ADMIN','ARTIST','LISTENER')")
+    public ResponseEntity<List<PlaylistResponse>> getSuggestedPlaylists() {
+        List<PlaylistResponse> playlistResponses = playlistFacade.suggestPlaylistForCurrentUser();
+        return ResponseEntity.ok().body(playlistResponses);
     }
 }
