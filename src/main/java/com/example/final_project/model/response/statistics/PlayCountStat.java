@@ -1,5 +1,6 @@
 package com.example.final_project.model.response.statistics;
 
+import com.example.final_project.model.response.MusicResponse;
 import lombok.*;
 
 @Getter
@@ -10,7 +11,6 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 public class PlayCountStat {
-    private Long musicId;
-    private String musicName;
+    private MusicResponse music;
     private Integer playCount;
 }

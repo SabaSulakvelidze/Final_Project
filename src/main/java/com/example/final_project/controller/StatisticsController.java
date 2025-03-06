@@ -20,6 +20,6 @@ public class StatisticsController {
     @GetMapping("/getStatistics")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<StatisticsResponse>> getStatistics() {
-        return ResponseEntity.ok().body(statisticsFacade.generateWeeklyReport());
+        return ResponseEntity.ok().body(statisticsFacade.generatePlayCountReport());
     }
 }
