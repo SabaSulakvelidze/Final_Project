@@ -68,8 +68,7 @@ Before you begin, ensure you have the following installed:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/music-management-service.git
-cd music-management-service
+git clone https://github.com/SabaSulakvelidze/Final_Project.git
 ```
 
 ### Build the Project
