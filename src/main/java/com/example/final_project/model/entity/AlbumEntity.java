@@ -33,7 +33,7 @@ public class AlbumEntity {
 
     public static AlbumEntity toAlbumEntity(AlbumRequest albumRequest,UserEntity owner) {
         return AlbumEntity.builder()
-                .albumName(albumRequest.getTitle())
+                .albumName(albumRequest.getAlbumName())
                 .owner(owner)
                 .build();
     }

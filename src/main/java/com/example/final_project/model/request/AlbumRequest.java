@@ -15,8 +15,8 @@ import java.util.Set;
 @Builder
 public class AlbumRequest {
     @NotNull
-    @Size(min = 2,max = 64, message = "title length must be between 2-64 characters")
-    private String title;
+    @Size(min = 2,max = 64, message = "albumName length must be between 2-64 characters")
+    private String albumName;
 
     @Builder.Default
     private Set<@NotNull @Positive(message = "ID must be positive")Long> musicIdList = new HashSet<>();
