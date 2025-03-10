@@ -23,7 +23,7 @@ This application enables CRUD operations on music records and offers pagination,
 
 ## Features
 
-- **Create, Read, Update, Delete (CRUD)** operations for music entities.
+- **Create, Read, Update, Delete (CRUD)** operations for music, album and playlist entities.
 - **Pagination and Filtering** for fetching music records using `Specification`.
 - **Custom Exception Handling** with meaningful error messages.
 - **Transaction Management** for database consistency.
@@ -42,7 +42,7 @@ This application enables CRUD operations on music records and offers pagination,
 
 **Database:**
 - Hibernate (as JPA implementation)
-- H2 Database (for testing and development)
+- PostgreSQL (for testing and development)
 
 **Build Tool:**
 - Maven
@@ -96,9 +96,9 @@ To switch to a different database (e.g., PostgreSQL, MySQL), update the `applica
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/Spotify_Project
-spring.datasource.username=user
-spring.datasource.password=user123
-spring.jpa.hibernate.ddl-auto=update
+spring.datasource.username=yourUsername
+spring.datasource.password=yourPassword
+spring.jpa.hibernate.ddl-auto=create/update
 ```
 
 ---
@@ -117,55 +117,55 @@ mvn test
 
 ## API Endpoints
 
-Here is an overview of the available API endpoints:
+### 1. **Sign Up a New User**
+**POST** `/auth/signUp`  
+Registers a new user. Admin users must be added manually.
 
-### 1. Save a Music Record
-
-**POST** `/api/music`  
-Request Body:
-```json
-{
-    "musicName": "Song Name",
-    "musicGenre": "Pop",
-    "author": "Author Name",
-    "album": "Album Name"
-}
-```
-
----
-
-### 2. Get All Music Records with Pagination and Filtering
-
-**GET** `/api/music`
-
-Query Parameters:  
-- `page` (defaults to `0`)
-- `size` (defaults to `10`)
-- Filtering options can be added based on the `Specification`.
+- **Request Body**:
+  ```json
+  {
+      "username": "user@example.com",
+      "password": "securePassword123",
+      "userRole": "LISTENER"
+  }
+  ```
+- **Responses**:
+   - `201 Created`: User successfully created.
+   - `403 Forbidden`: When attempting to create an admin user.
 
 ---
 
-### 3. Get Music by ID
+### 2. **Verify Email**
+**POST** `/auth/verify`  
+Verifies a user's email address with a verification code, which will be sent to indicated email.
 
-**GET** `/api/music/{id}`
-
----
-
-### 4. Update Music by ID
-
-**PUT** `/api/music/{id}`  
-Request Body: *(only include fields you want to update)*  
-```json
-{
-    "musicName": "Updated Song Name"
-}
-```
+- **Query Params**:  
+  `userEmail`, `verificationCode`.
+- **Response**: Success confirmation (`200 OK`).
 
 ---
 
-### 5. Delete Music by ID
+### 3. **Log In**
+**POST** `/auth/signIn`  
+Logs in a user with their username and password.
 
-**DELETE** `/api/music/{id}`
+- **Query Params**:  
+  `username` (email/username), `password` (user's password).
+- **Response**: Success message or token (`200 OK`).
+
+---
+
+### 4. **Resend Verification Code**
+**GET** `/auth/resendVerificationCode`  
+Resends a verification code to the user's email.
+
+- **Query Param**:  
+  `userEmail`.
+- **Response**: Confirmation (`200 OK`).
+
+### bonus
+**GET** `/stats/getStatistics`
+This endpoint is created to test scheduler without changing configurations.
 
 ---
 
